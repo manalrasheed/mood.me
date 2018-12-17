@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en-US">
+	<head>
+		<title>mood.me - Note</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+		<!-- animate.css -->
+		<link rel="stylesheet" href="css/animate.css" />
+		<link rel="stylesheet" href="css/note_style.css" />
+		
+		<script src="js/sketch.js"></script>
+
+		<!-- jQuery -->
+<script type="text/javascript" src="js/lib/jquery.1.10.2.min.js"></script>
+<!-- jQuery UI -->
+<script type="text/javascript" src="js/lib/jquery.ui.core.1.10.3.min.js"></script>
+<script type="text/javascript" src="js/lib/jquery.ui.widget.1.10.3.min.js"></script>
+<script type="text/javascript" src="js/lib/jquery.ui.mouse.1.10.3.min.js"></script>
+<script type="text/javascript" src="js/lib/jquery.ui.draggable.1.10.3.min.js"></script>
+<!-- wColorPicker -->
+<link rel="Stylesheet" type="text/css" href="css/wColorPicker.min.css" />
+<script type="text/javascript" src="js/lib/wColorPicker.min.js"></script>
+<link rel="Stylesheet" type="text/css" href="css/wPaint.min.css" />
+<script type="text/javascript" src="js/wPaint.min.js"></script>
+<script type="text/javascript" src="js/plugins/main/wPaint.menu.main.min.js"></script>
+<script type="text/javascript" src="js/plugins/text/wPaint.menu.text.min.js"></script>
+<script type="text/javascript" src="js/plugins/shapes/wPaint.menu.main.shapes.min.js"></script>
+<script type="text/javascript" src="js/plugins/file/wPaint.menu.main.file.min.js"></script>
+
+	</head>
+	<body>
+		<br><br>
+		<div class="container-fluid">
+			<div style="float:left;" class="dropdown">
+        		<img id="menuicon" class="btn dropdown-toggle" src="img/burger1.png" alt="dropdown image" data-toggle="dropdown">
+        			<ul class="dropdown-menu">
+            			<li><a href="#">Child 1</a></li>
+           				<li><a href="#">Child 2</a></li>
+            			<li><a href="#">Add New..</a></li>
+        			</ul>
+    		</div>
+    		<b><h2 id="appname">mood.me</h2></b>
+		</div>
+		<div class="container-fluid">
+			<hr style="border: 2px solid #aaaaaa;" />
+		</div>
+		<div class="container">
+			<div class="row">
+				<div id="note_block" class="col-xs-12 animated tada">
+					<h1 style="float:left;padding-right: 5%;">Draw -</h1>
+					<img id="notebook_image" src="img/pencil.jpg" />
+				</div>
+			</div>
+		</div>
+		<br><br>
+
+		<div class="content-box">
+      <!-- jQuery UI -->
+      <script type="text/javascript" src="js/lib/jquery.ui.core.1.10.3.min.js"></script>
+      <script type="text/javascript" src="js/lib/jquery.ui.widget.1.10.3.min.js"></script>
+      <script type="text/javascript" src="js/lib/jquery.ui.mouse.1.10.3.min.js"></script>
+      <script type="text/javascript" src="js/lib/jquery.ui.draggable.1.10.3.min.js"></script>
+      
+      <!-- wColorPicker -->
+      <link rel="Stylesheet" type="text/css" href="css/lib/wColorPicker.min.css" />
+      <script type="text/javascript" src="js/lib/wColorPicker.min.js"></script>
+
+      <!-- wPaint -->
+      <link rel="Stylesheet" type="text/css" href="css/wPaint.min.css" />
+      <script type="text/javascript" src="js/wPaint.min.js"></script>
+      <script type="text/javascript" src="js/plugins/main/wPaint.menu.main.min.js"></script>
+      <script type="text/javascript" src="js/plugins/text/wPaint.menu.text.min.js"></script>
+      <script type="text/javascript" src="js/plugins/shapes/wPaint.menu.main.shapes.min.js"></script>
+      <script type="text/javascript" src="js/plugins/file/wPaint.menu.main.file.min.js"></script>
+
+      <div id="wPaint" style="position:relative; width:500px; height:200px; margin:50px auto 0 auto;"></div>
+      <div style="position:relative; width:500px; margin:10px auto;">
+        <input id="email" type="text" placeholder="Enter email"/>
+        <input id="email-button" type="button" value="Email Image" onclick="emailImg()"/>
+        <span id="email-msg" style="color:#6699ff;"></span>
+      </div>
+      <div id="wPaint-img" style="position:relative; width:500px; margin:0 auto;"></div>
+
+      <script type="text/javascript">
+        var images = [
+          '/test/uploads/wPaint.png',
+        ];
+
+        var msgTimer = null;
+
+        function saveImg(image) {
+          var _this = this;
+
+          $.ajax({
+            type: 'POST',
+            url: '/test/upload.php',
+            data: {image: image},
+            success: function (resp) {
+
+              // internal function for displaying status messages in the canvas
+              _this._displayStatus('Image saved successfully');
+
+              // doesn't have to be json, can be anything
+              // returned from server after upload as long
+              // as it contains the path to the image url
+              // or a base64 encoded png, either will work
+              resp = $.parseJSON(resp);
+
+              // update images array / object or whatever
+              // is being used to keep track of the images
+              // can store path or base64 here (but path is better since it's much smaller)
+              images.push(resp.img);
+
+              // do something with the image
+              $('#wPaint-img').html($('<img/>').attr('src', image));
+            }
+          });
+        }
+
+        function loadImgBg () {
+
+          // internal function for displaying background images modal
+          // where images is an array of images (base64 or url path)
+          // NOTE: that if you can't see the bg image changing it's probably
+          // becasue the foregroud image is not transparent.
+          this._showFileModal('bg', images);
+        }
+
+        function loadImgFg () {
+
+          // internal function for displaying foreground images modal
+          // where images is an array of images (base64 or url path)
+          this._showFileModal('fg', images);
+        }
+
+        function emailImg () {
+          var email = $('#email').val();
+
+          if ($.trim(email) === '') {
+            alert('enter an email!');
+            return;
+          }
+
+          $('#email-button').prop('disabled', true);
+          $('#email-msg').html('');
+
+          clearTimeout(msgTimer);
+
+          $.ajax({
+            type: 'POST',
+            url: 'http://sendmail.websanova.com/wpaint_email',
+            data: {
+              email: email,
+              image: $('#wPaint').wPaint('image')
+            },
+            success: function(resp) {
+              //alert('successfully emailed image!');
+            },
+            complete: function() {
+              $('#email-msg').html('Image successfully emailed.');
+              $('#email-button').prop('disabled', false);
+
+              msgTimer = setTimeout(function () {
+                $('#email-msg').html('');
+              }, 2000);
+            }
+          });
+        }
+
+        // init wPaint
+        $('#wPaint').wPaint({
+          bg: '#cacaca',
+          menuOffsetLeft: -35,
+          menuOffsetTop: -50,
+          saveImg: saveImg,
+          loadImgBg: loadImgBg,
+          loadImgFg: loadImgFg
+        });
+      </script>
+    </div>
+
+		<!--<div class="container">
+			<div class="tools">
+			  <a style="float:left;" href="#tools_sketch" data-tool="marker">Marker</a>
+			  <a style="float:left;" href="#tools_sketch" data-tool="eraser">Eraser</a>
+			  <a href="#tools_sketch" data-download="png">Download</a>
+			</div>
+			<canvas style="border:1px solid black;" id="tools_sketch" width="800" height="300"></canvas>
+			<script type="text/javascript">
+			  $(function() {
+			  	 $.each(['#f00', '#ff0', '#0f0', '#0ff', '#00f', '#f0f', '#000', '#fff'], function() {
+			      $('#colors_demo .tools').append("<a href='#colors_sketch' data-color='" + this + "' style='width: 10px; background: " + this + ";'></a> ");
+			    });
+			    $.each([3, 5, 10, 15], function() {
+			      $('#colors_demo .tools').append("<a href='#colors_sketch' data-size='" + this + "' style='background: #ccc'>" + this + "</a> ");
+			    });
+			    $('#tools_sketch').sketch();
+			  });
+			</script>
+		</div> -->
+
+		<br><br>
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-xs-6 img-hover">
+					<a class="btn btn-primary" href="Option.html" role="button">Back</a>
+				</div>
+				<div class="col-xs-6 img-hover">
+					<a class="btn btn-primary custom-button-width pull-right" href="#" role="button">Done</a>
+				</div>
+			</div>
+		</div>
+		<br><br>
+	</body>
+</html>
+
