@@ -1,0 +1,52 @@
+#appname
+{
+	text-align: center;
+	font-family: "Comic Sans MS";
+}
+
+img
+{
+	height: 10.8%;
+	width: 10.8%;
+	padding-left: 4.1%;
+	padding-right: 0.5%;
+}
+
+.line
+{
+	float: left;
+}
+
+@media only screen and (max-width:500px)
+{
+	#menuicon
+	{
+		height: 30%;
+		width: 30%;
+	}
+
+	#main_question
+	{
+		text-align: center;
+	}
+
+	h1
+	{
+		font-size: 200%;
+	}
+}
+
+@media only screen and (min-width:500px)
+{
+	#menuicon
+	{
+		height: 80px;
+		width: 100px;
+	}
+
+	h1
+	{
+		font-size: 320%;
+		padding-right: -50%;
+	}
+}
